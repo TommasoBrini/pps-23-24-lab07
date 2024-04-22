@@ -61,6 +61,7 @@ class NotTwoConsecutiveParser(chars: Set[Char]) extends BasicParser(chars) with 
   println(parserNTC.parseAll("".toList)) // true
 
   // note we do not need a class name here, we use the structural type
+  // Full Linearization: NonEmpty -> NotTwoConsecutive -> BasicParser -> Parser
   def parserNTCNE = new BasicParser(Set('X', 'Y', 'Z')) with NotTwoConsecutive[Char] with NonEmpty[Char]
   println(parserNTCNE.parseAll("XYZ".toList)) // true
   println(parserNTCNE.parseAll("XYYZ".toList)) // false
