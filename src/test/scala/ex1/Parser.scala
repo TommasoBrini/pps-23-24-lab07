@@ -12,8 +12,9 @@ class ParserTests extends org.scalatest.funsuite.AnyFunSuite:
   // note we do not need a class name here, we use the structural type
   def parserNTCNE = new BasicParser(Set('X', 'Y', 'Z')) with NotTwoConsecutive[Char] with NonEmpty[Char]
   def sparser: Parser[Char] = "abc".charParser()
+  def parserShortenThenN = new ShortenThenNParser(Set('a', 'b', 'c'), 5) 
 
-  test("TestBasicParser"):
+  test("testBasicParser"):
     parser.parseAll("abbc".toList) shouldBe true
     parser.parseAll("aabcdc".toList) shouldBe false
     parser.parseAll("".toList) shouldBe true
@@ -38,3 +39,8 @@ class ParserTests extends org.scalatest.funsuite.AnyFunSuite:
     sparser.parseAll("aabc".toList) shouldBe true
     sparser.parseAll("aabcdc".toList) shouldBe false
     sparser.parseAll("".toList) shouldBe true
+
+  test("testShorterThenN"):
+    parserShortenThenN.parseAll("aaaaaaaaa".toList) shouldBe false
+    parserShortenThenN.parseAll("abc".toList) shouldBe true
+    parserShortenThenN.parseAll("abcd".toList) shouldBe false
