@@ -78,3 +78,4 @@ class RobotRepeated(robot: Robot, rep: Int) extends Robot:
   robot.turn(robot.direction.turnRight) // robot at (0, 1) facing East
   robot.act() // robot at (1, 1) facing East
   robot.act() // robot at (2, 1) facing East
+
