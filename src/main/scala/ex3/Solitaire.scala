@@ -1,6 +1,20 @@
 package ex3
 
+import scala.collection.IterableFactory
+
 object Solitaire extends App:
+
+  type Cell = (Int, Int)
+  type Solution = Iterable[Cell]
+  type IterableFactory = Solution => Iterable[Solution]
+  val w = 5
+  val h = 5
+  given IterableFactory = LazyList(_)
+  
+  def placeNumber(): Iterable[Solution] = 
+    //TODO 
+    ???
+
   def render(solution: Seq[(Int, Int)], width: Int, height: Int): String =
     val reversed = solution.reverse
     val rows =
@@ -11,5 +25,4 @@ object Solitaire extends App:
       yield row.mkString
     rows.mkString("\n")
 
-
-  println(render(solution = Seq((0, 0), (2, 1)), width = 3, height = 3))
+  placeNumber().zipWithIndex.foreach({solution => println("Solution " + solution._2); println(render(solution._1.toList, w, h))})
