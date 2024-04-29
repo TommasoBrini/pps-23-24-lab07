@@ -1,5 +1,7 @@
 package ex2
 
+import scala.util.Random
+
 type Position = (Int, Int)
 enum Direction:
   case North, East, South, West
@@ -55,6 +57,19 @@ class RobotWithBattery(val robot: Robot, private var bat: Int) extends Robot:
   override def turn(dir: Direction): Unit = 
     if consume() then robot.turn(dir)
 
+class RobotCanFail(robot: Robot, prob: Double) extends Robot:
+  require(prob <= 100 && prob >= 0)
+
+  export robot.{position, direction}
+  
+  private def fail(): Boolean =
+    (Random.nextDouble() * 100) > prob
+
+  override def turn(dir: Direction): Unit = 
+    if fail() then robot.turn(dir)
+
+  override def act(): Unit = 
+    if fail() then robot.act()
 
 @main def testRobot(): Unit =
   val robot = LoggingRobot(SimpleRobot((0, 0), Direction.North))

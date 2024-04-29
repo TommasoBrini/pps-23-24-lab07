@@ -59,3 +59,10 @@ class RobotSpec extends AnyFlatSpec with Matchers:
     robot.position should be((0, 1))
     robot.turn(Direction.East)
     robot.direction should be(Direction.North)
+
+  "A RobotCanFail" should "failed correctly" in:
+    val robot = RobotCanFail(SimpleRobot((0, 0), Direction.North), 100)
+    robot.act()
+    robot.position should be((0, 0))
+    robot.turn(Direction.East)
+    robot.direction should be(Direction.North)
