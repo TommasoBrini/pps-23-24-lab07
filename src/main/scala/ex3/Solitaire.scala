@@ -11,9 +11,11 @@ object Solitaire extends App:
   val h = 5
   given IterableFactory = LazyList(_)
   
-  def placeNumber(): Iterable[Solution] = 
+  def placeNumbers(n: Int = w*h)(using factory: IterableFactory): Iterable[Solution] = n match
     //TODO 
-    ???
+    case 1 => factory(List())
+    case _ =>
+      placeNumbers(n-1)
 
   def render(solution: Seq[(Int, Int)], width: Int, height: Int): String =
     val reversed = solution.reverse
@@ -25,4 +27,4 @@ object Solitaire extends App:
       yield row.mkString
     rows.mkString("\n")
 
-  placeNumber().zipWithIndex.foreach({solution => println("Solution " + solution._2); println(render(solution._1.toList, w, h))})
+  placeNumbers().zipWithIndex.foreach({solution => println("Solution " + solution._2); println(render(solution._1.toList, w, h))})
