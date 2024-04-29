@@ -46,31 +46,32 @@ class LoggingRobot(val robot: Robot) extends Robot:
 
 class RobotWithBattery(val robot: Robot, private var bat: Int) extends Robot:
   export robot.{position, direction}
-  
   private def consume(): Boolean =
     bat = bat - 1
     bat >= 0
-
   override def act(): Unit = 
     if consume() then robot.act()
-
   override def turn(dir: Direction): Unit = 
     if consume() then robot.turn(dir)
 
 class RobotCanFail(robot: Robot, prob: Double) extends Robot:
   require(prob <= 100 && prob >= 0)
-
-  export robot.{position, direction}
-  
+  export robot.{position, direction}  
   private def fail(): Boolean =
     (Random.nextDouble() * 100) > prob
-
   override def turn(dir: Direction): Unit = 
     if fail() then robot.turn(dir)
-
   override def act(): Unit = 
     if fail() then robot.act()
 
+class RobotRepeated(robot: Robot, rep: Int) extends Robot:
+  export robot.{position, direction, turn}
+  override def act(): Unit = 
+    for 
+      _ <- 1 to rep
+    yield
+      robot.act()
+    
 @main def testRobot(): Unit =
   val robot = LoggingRobot(SimpleRobot((0, 0), Direction.North))
   robot.act() // robot at (0, 1) facing North

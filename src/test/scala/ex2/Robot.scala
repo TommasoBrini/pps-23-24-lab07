@@ -66,3 +66,12 @@ class RobotSpec extends AnyFlatSpec with Matchers:
     robot.position should be((0, 0))
     robot.turn(Direction.East)
     robot.direction should be(Direction.North)
+
+  "A RobotRepeated" should "act repeated correctly" in:
+    val robot = RobotRepeated(SimpleRobot((0, 0), Direction.North), 5)
+    robot.act()
+    robot.position should be((0,5))
+    robot.turn(Direction.East)
+    robot.act()
+    robot.position should be((5, 5))
+  
