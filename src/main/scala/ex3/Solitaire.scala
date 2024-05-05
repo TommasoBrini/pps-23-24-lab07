@@ -7,28 +7,29 @@ object Solitaire:
   type Cell = (Int, Int)
   type Solution = Iterable[Cell]
   type IterableFactory = Solution => Iterable[Solution]
-  val w = 2
-  val h = 2
+  val w = 7
+  val h = 5
   given IterableFactory = LazyList(_)
   var possibleMove = List((2, 2), (-2, -2), (2, -2), (-2, 2), (-3, 0), (3, 0), (0, -3), (0, 3))
 
-  def isValid(curr: Cell): Boolean =
-    curr._1 >= 0 && curr._1 < w && curr._2 >= 0 && curr._2 < h
+  def isValid(curr: Cell, next: Cell): Boolean =
+    val x = (curr._1 - next._1).abs
+    val y = (curr._2 - next._2).abs
+    (x == 3 && y == 0) || (x == 0 && y == 3) || (x == 2 && y == 2)
+
 
   def isSafe(cell: Cell, solution: Iterable[Cell]): Boolean =
-    !solution.exists(p => p == cell || isValid(cell))
+    !solution.exists(p => p == cell) & isValid(solution.last, cell)
 
-  def placeMarks(n: Int = w*h, curr: Cell = (w/2, h/2), solution: Solution = List((w/2, h/2)))(using factory: IterableFactory): Iterable[Solution] = n match
-    case 1 => factory(solution)
+  def placeMarks(n: Int = w*h)(using factory: IterableFactory): Iterable[Solution] = n match
+    case 1 => factory(List((w/2, h/2)))
     case _ => 
       for
-        move <- possibleMove
-        nextCell = (curr._1 + move._1, curr._2 + move._2)
-        if isSafe(nextCell, solution)
-        newSolution = solution ++ List(nextCell)
-        generatedSolution <- placeMarks(n-1, nextCell, newSolution)
-        if generatedSolution.size == w * h
-      yield generatedSolution
+        sol <- placeMarks(n - 1)
+        x <- 0 until w
+        y <- 0 until h
+        if isSafe((x,y), sol)
+      yield sol.++(List((x, y)))
 
   def render(solution: Seq[(Int, Int)], width: Int, height: Int): String =
     val reversed = solution
